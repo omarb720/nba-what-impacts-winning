@@ -238,33 +238,5 @@ ggplot(team_averages_combined, aes(x = WinGroup, y = SOEHome, fill = WinGroup)) 
   annotate("text", x = 3, y = max(team_averages_combined$SOEHome, na.rm = TRUE) + 0.02, 
            label = "Middle 10 Teams", fontface = "bold", size = 5)
 
-team_averages_combined |> 
-  arrange(desc(TotalEffDiff.x)) |> 
-  slice(c(1:5, (n()-4):n())) |> # Top 5 and bottom 5 teams
-  ggplot(aes(x = reorder(Team, TotalEffDiff.x), y = TotalEffDiff.x, fill = TotalEffDiff.x > 0)) +
-  geom_col() +
-  coord_flip() +
-  labs(title = "Top and Bottom Teams by Efficiency Differential",
-       x = "Team",
-       y = "Efficiency Differential") +
-  scale_fill_manual(values = c("red", "blue"), labels = c("Underperforming", "Overperforming")) +
-  theme_minimal() + 
-  annotate("text", x = 2, y = min(team_averages_combined$TotalEffDiff.x, na.rm = TRUE) - 0.5, 
-           label = "EffDiffHome = OERHome - DERHome\nEffDiffAway = OERAway - DERAway\nTotalEffDiff = EffDiffHome - EffDiffAway", 
-           size = 3, hjust = 0, fontface = "italic", color = "black")
 
-ggplot(team_averages_combined, aes(x = HPace, y = APace, label = Team)) +
-  geom_point(color = "purple", size = 3) +
-  geom_text(vjust = -0.5, hjust = 0.5) +
-  labs(title = "Pace Comparison: Home vs. Away",
-       x = "Pace at Home",
-       y = "Pace on the Road") +
-  theme_minimal()
 
-ggplot(team_averages_combined, aes(x = OERHome, y = OERAway, label = Team)) +
-  geom_point(color = "blue", size = 3) +
-  geom_text(vjust = -0.5, hjust = 0.5) +
-  labs(title = "Home vs. Away Offensive Efficiency (OER)",
-       x = "OER at Home",
-       y = "OER on the Road") +
-  theme_minimal()
