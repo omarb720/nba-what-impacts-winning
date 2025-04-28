@@ -5,12 +5,6 @@ library(readr)
 library(devtools)
 library("nbastatR")
 library(hoopR)
-<<<<<<< HEAD
-
-=======
-library(ggplot2)
-library(ggrepel)
->>>>>>> d888dd368eb6a80806c63231039ca682ca041415
 
 GAME2025=game_logs(
   seasons = 2025,
@@ -26,18 +20,10 @@ home_games2025 <- GAME2025 |> filter(locationGame == "H")
 away_games2025 <- GAME2025 |> filter(locationGame == "A")
 GameStats2025 <- inner_join(home_games2025, away_games2025, by = c("idGame"), suffix = c("H", "A"))
 
-<<<<<<< HEAD
-=======
-#Dropping selected columns
->>>>>>> d888dd368eb6a80806c63231039ca682ca041415
 GameStats12024 <- GameStats2025[, -c(2,3,4,7,10:12,14,16:21,22,30,47)]
 GameStats22024 <- GameStats12024[, -c(6,32:36,39:43,45,46,48:50)]
 GameStats32024 <- GameStats22024[, -c(29,30,34,35,43,59,60)]
 
-<<<<<<< HEAD
-=======
-#renaming columns
->>>>>>> d888dd368eb6a80806c63231039ca682ca041415
 GameStatsClean2025 <- GameStats32024 |>
   rename(Year = yearSeasonH, Date= dateGameH, GameID = idGame, HomeTeam = nameTeamH,
          HomeTeamID = idTeamH, Home  = slugTeamH, AwayTeam = nameTeamA,
@@ -45,10 +31,6 @@ GameStatsClean2025 <- GameStats32024 |>
 
 GameStatsClean2025 <- GameStatsClean2025[, -c(4,29,42)]
 
-<<<<<<< HEAD
-=======
-#creating advanced metrics
->>>>>>> d888dd368eb6a80806c63231039ca682ca041415
 GameStatsClean2025 <- GameStatsClean2025 |>
   mutate(
     OERHome= ptsTeamH / (fgaTeamH + ((ftaTeamH * 0.9)/2)+ tovTeamH),
@@ -78,13 +60,7 @@ GameStatsClean2025 <- GameStatsClean2025 |>
 
 GameStatsClean2025
 
-<<<<<<< HEAD
-
-
 # Calculate averages for team stats, including advanced metrics
-=======
-#creating averages for teams home 
->>>>>>> d888dd368eb6a80806c63231039ca682ca041415
 team_averages_home <- GameStatsClean2025 |>  
   group_by(Home) |>  
   summarise(
@@ -106,17 +82,10 @@ team_averages_home <- GameStatsClean2025 |>
     EffDiffHome = mean(EffDiffHome, na.rm = TRUE),
     TotalEffDiff = mean(TotalEffDiff, na.rm = TRUE),
     PPPHome = mean(PPPHome, na.rm = TRUE),
-<<<<<<< HEAD
     SOEHome = mean(SOEHome, na.rm = TRUE),
     assistH = mean(astTeamH, na.rm = TRUE)
   )
 
-=======
-    SOEHome = mean(SOEHome, na.rm = TRUE)
-  )
-
-#creating averages for teams away
->>>>>>> d888dd368eb6a80806c63231039ca682ca041415
 team_averages_away <- GameStatsClean2025 |>  
   group_by(Away) |>  
   summarise(
@@ -138,14 +107,12 @@ team_averages_away <- GameStatsClean2025 |>
     EffDiffAway = mean(EffDiffAway, na.rm = TRUE),
     TotalEffDiff = mean(TotalEffDiff, na.rm = TRUE),
     PPPAway = mean(PPPAway, na.rm = TRUE),
-<<<<<<< HEAD
     SOEAway = mean(SOEAway, na.rm = TRUE),
     assistA = mean(astTeamA, na.rm = TRUE)
   )
 
 team_averages_home
 team_averages_away
-
 
 
 
@@ -158,7 +125,8 @@ team_averages_combined <- full_join(team_averages_home, team_averages_away,
 team_averages_combined
 
 
-#Games are up until March 15th due to accessibility of data. Only got one game from the 16th can't assess anything else 
+
+#Games are up until March 15th due to accesibility of data. Only got one game from the 16th can't assess anything else 
 team_averages_combined <- team_averages_combined |>  
   mutate(
     Wins = case_when(
@@ -225,88 +193,6 @@ team_averages_combined <- team_averages_combined |>
       Team == "TOR" ~ 43,  
       Team == "UTA" ~ 52,
       Team == "WAS" ~ 51,
-=======
-    SOEAway = mean(SOEAway, na.rm = TRUE)
-  )
-# View results
-team_averages_home
-team_averages_away
-
-# Merge home and away team averages into one dataset
-team_averages_combined <- full_join(team_averages_home, team_averages_away, 
-                                    by = c("Home" = "Away")) |> 
-  rename(Team = Home) # Renaming the column for consistency
-
-# View merged dataset
-team_averages_combined
-
-team_averages_combined <- team_averages_combined |>  
-  mutate(
-    Wins = case_when(
-      Team == "ATL" ~ 30,  
-      Team == "BKN" ~ 21,
-      Team == "BOS" ~ 46,
-      Team == "CHA" ~ 15,  
-      Team == "CHI" ~ 26,
-      Team == "CLE" ~ 54,
-      Team == "DAL" ~ 32,  
-      Team == "DEN" ~ 41,
-      Team == "DET" ~ 35,
-      Team == "GSW" ~ 36,  
-      Team == "HOU" ~ 39,
-      Team == "IND" ~ 35,
-      Team == "LAC" ~ 34,  
-      Team == "LAL" ~ 40,
-      Team == "MEM" ~ 40,
-      Team == "MIA" ~ 29,  
-      Team == "MIL" ~ 36,
-      Team == "MIN" ~ 37,
-      Team == "NOP" ~ 17,  
-      Team == "NYK" ~ 40,
-      Team == "OKC" ~ 53,
-      Team == "ORL" ~ 30,  
-      Team == "PHI" ~ 22,
-      Team == "PHX" ~ 30,
-      Team == "POR" ~ 28,  
-      Team == "SAC" ~ 33,
-      Team == "SAS" ~ 26,
-      Team == "TOR" ~ 21,  
-      Team == "UTA" ~ 15,
-      Team == "WAS" ~ 13,
-      TRUE ~ NA_real_
-    ),
-    Losses = case_when(
-      Team == "ATL" ~ 34,  
-      Team == "BKN" ~ 42,
-      Team == "BOS" ~ 18,
-      Team == "CHA" ~ 48,  
-      Team == "CHI" ~ 38,
-      Team == "CLE" ~ 10,
-      Team == "DAL" ~ 33,  
-      Team == "DEN" ~ 23,
-      Team == "DET" ~ 29,
-      Team == "GSW" ~ 28,  
-      Team == "HOU" ~ 25,
-      Team == "IND" ~ 27,
-      Team == "LAC" ~ 29,  
-      Team == "LAL" ~ 22,
-      Team == "MEM" ~ 24,
-      Team == "MIA" ~ 34,  
-      Team == "MIL" ~ 27,
-      Team == "MIN" ~ 29,
-      Team == "NOP" ~ 48,  
-      Team == "NYK" ~ 23,
-      Team == "OKC" ~ 11,
-      Team == "ORL" ~ 35,  
-      Team == "PHI" ~ 41,
-      Team == "PHX" ~ 34,
-      Team == "POR" ~ 37,  
-      Team == "SAC" ~ 30,
-      Team == "SAS" ~ 36,
-      Team == "TOR" ~ 43,  
-      Team == "UTA" ~ 49,
-      Team == "WAS" ~ 49,
->>>>>>> d888dd368eb6a80806c63231039ca682ca041415
       TRUE ~ NA_real_
     ),
     WinPct = Wins / (Wins + Losses)
@@ -314,14 +200,11 @@ team_averages_combined <- team_averages_combined |>
 
 team_averages_combined
 
-<<<<<<< HEAD
 team_averages_combined <- team_averages_combined |>
   mutate(totalrebH = orebH + drebH,
          totalrebA = orebA + drebA)
 
 team_averages_combined
-
-
 
 team_averages_combined <- team_averages_combined |>
   mutate(
@@ -331,9 +214,6 @@ team_averages_combined <- team_averages_combined |>
     TotalRebounds = totalrebH + totalrebA,
     AvgSOE = (SOEHome + SOEAway) / 2
   )
-
-
-
 
 team_averages_combined <- team_averages_combined |>
   mutate(Conference = case_when(
@@ -348,9 +228,6 @@ top_teams <- team_averages_combined |>
   select(Rank, Team, Conference, Wins)
 
 top_teams
-
-
-
 
 # Create Rank and Group columns
 ranked_teams <- team_averages_combined |>
@@ -398,50 +275,22 @@ ggplot(filter(ranked_teams, RankGroup == "Bottom 10 (Ranks 21–30)"),
 
 team_averages_combined <- team_averages_combined |> 
   arrange(desc(Wins)) |>  
-=======
-ggplot(team_averages_combined, aes(x = OERHome, y = WinPct)) +
-  geom_point(aes(color = Team), size = 3) +  
-  geom_text_repel(aes(label = Team), size = 4) + 
-  labs(title = "Offensive Efficiency (Home) vs. Win Percentage",
-       x = "Home Offensive Efficiency Rating (OER)",
-       y = "Win Percentage") +
-  theme_minimal()
-
-ggplot(team_averages_combined, aes(x = OERAway, y = WinPct)) +
-  geom_point(aes(color = Team), size = 3) +  
-  geom_text_repel(aes(label = Team), size = 4) + 
-  labs(title = "Offensive Efficiency (Away) vs. Win Percentage",
-       x = "Away Offensive Efficiency Rating (OER)",
-       y = "Win Percentage") +
-  theme_minimal()
-
-team_averages_combined <- team_averages_combined |> 
-  arrange(desc(Wins)) |> 
->>>>>>> d888dd368eb6a80806c63231039ca682ca041415
   mutate(WinGroup = case_when(
     row_number() <= 10 ~ "High-Win Teams", 
     row_number() > 10 & row_number() <= (n() - 10) ~ "Mid-Win Teams", 
     row_number() > (n() - 10) ~ "Low-Win Teams"
-<<<<<<< HEAD
   ),
   WinGroup = factor(WinGroup, levels = c("High-Win Teams", "Mid-Win Teams", "Low-Win Teams")))
 
 
 
 ggplot(team_averages_combined, aes(x = WinGroup, y = AvgSOE, fill = WinGroup)) +
-=======
-  ))
-
-
-ggplot(team_averages_combined, aes(x = WinGroup, y = SOEHome, fill = WinGroup)) +
->>>>>>> d888dd368eb6a80806c63231039ca682ca041415
   geom_boxplot(alpha = 0.7) +
   labs(title = "SOE Distribution Across Win Groups",
        x = "Win Group",
        y = "SOE (Shot Opportunity Efficiency)") +
   theme_minimal() +
   theme(legend.position = "none") +
-<<<<<<< HEAD
   annotate("text", x = 1, y = max(team_averages_combined$AvgSOE, na.rm = TRUE) + 0.02, 
            label = "Top 10 Teams", fontface = "bold", size = 5) +
   annotate("text", x = 2, y = max(team_averages_combined$AvgSOE, na.rm = TRUE) + 0.02, 
@@ -476,7 +325,6 @@ ggplot(team_averages_combined, aes(x = WinGroup, y = AvgDER, fill = WinGroup)) +
            label = "Middle 10 Teams", fontface = "bold", size = 5) +
   annotate("text", x = 3, y = max(team_averages_combined$AvgDER, na.rm = TRUE) + 0.02, 
            label = "Bottom 10 Teams", fontface = "bold", size = 5)
-
 
 soe_summary <- team_averages_combined |>
   group_by(WinGroup) |>
@@ -582,7 +430,6 @@ ggplot(team_averages_combined, aes(x = reorder(Team, AvgDER), y = AvgDER, fill =
   theme_minimal(base_size = 12)
 
 
-
 summary_by_team <- team_averages_combined |>
   select(Team, Wins, ptsH, ptsA, OERHome, OERAway)
 
@@ -614,7 +461,7 @@ ggplot(team_averages_combined, aes(x = AvgOER, y = WinPct)) +
   theme_minimal()
 
 team_averages_combined <- team_averages_combined |>
-  arrange(desc(TotalPoints)) %>%
+  arrange(desc(TotalPoints)) |>
   mutate(PointsRank = row_number(),
          PointsTier = case_when(
            PointsRank <= 10 ~ "Top 10",
@@ -636,7 +483,6 @@ ggplot(team_averages_combined, aes(x = TotalPoints, y = WinPct)) +
 
 summary_by_team2 <- team_averages_combined |>
   select(Team, Wins, totalrebH, totalrebA, SOEHome, SOEAway)
-)
 summary_by_team2 <- summary_by_team2 |>
   arrange(desc(TotalRebounds)) |>
   mutate(TotalReboundsRank = row_number()) |>
@@ -686,16 +532,6 @@ ggplot(team_averages_combined, aes(x = TotalRebounds, y = WinPct)) +
   theme_minimal()
 
 
-
-
-=======
-  annotate("text", x = 1, y = max(team_averages_combined$SOEHome, na.rm = TRUE) + 0.02, 
-           label = "Top 10 Teams", fontface = "bold", size = 5) +
-  annotate("text", x = 2, y = max(team_averages_combined$SOEHome, na.rm = TRUE) + 0.02, 
-           label = "Bottom 10 Teams", fontface = "bold", size = 5) +
-  annotate("text", x = 3, y = max(team_averages_combined$SOEHome, na.rm = TRUE) + 0.02, 
-           label = "Middle 10 Teams", fontface = "bold", size = 5)
->>>>>>> d888dd368eb6a80806c63231039ca682ca041415
 
 
 
